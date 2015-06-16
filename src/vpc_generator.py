@@ -26,13 +26,7 @@ class VPCGenerator:
         self.ref_region = Ref('AWS::Region')
         self.ref_stack_name = Ref('AWS::StackName')
 
-        self.vpc = self.add_resource(
-            VPC(
-                'VPC',
-                CidrBlock=template_args.get('vpc_cidr'),
-                Tags=Tags(
-                    Application=self.ref_stack_id,
-                    Name="CloudformationLab")))
+        self.create_vpc(template_args)
 
         self.create_internet_gateway()
 
@@ -46,6 +40,14 @@ class VPCGenerator:
         self.create_security_group(template_args)
 
 
+    def create_vpc(self, template_args):
+        self.vpc = self.add_resource(
+            VPC(
+                'VPC',
+                CidrBlock=template_args.get('vpc_cidr'),
+                Tags=Tags(
+                    Application=self.ref_stack_id,
+                    Name="CloudformationLab")))
 
     def create_internet_gateway(self):
         internetGateway = self.add_resource(
