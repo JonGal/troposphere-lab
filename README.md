@@ -24,7 +24,7 @@ python src/lab.py -h
 To generate some Cloudformation JSON simply run the command:
 
 ```bash
-python src/lab.py generate --config-file src/template_config.json
+python src/lab.py generate --config-file src/template_config.yaml
 ```
 
 This should produce a `labenvironment.template` file that you can now use to deploy your
