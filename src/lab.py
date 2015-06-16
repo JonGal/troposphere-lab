@@ -32,11 +32,11 @@ class CFLab:
         @param config_dictionary [dict] collection of keyword arguments for this class implementation
         '''
         print 'creating some cloudformation!'
-        self.globals                    = config_dictionary.get('global', {})
+        self.globals                    = config_dictionary.get('globals', {})
         self.template_args              = config_dictionary.get('template', {})
 
         self.template                   = Template()
-        self.template.description       = self.template_args.get('description', 'Cloudformation from code!')
+        self.template.description       = self.globals.get('description', '')
 
         #create VPC, EC2
         self.vpc_generator = VPCGenerator(config_dictionary)
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     arguments = docopt(__doc__, version='CFLab 0.1')
     print arguments
 
-    config_file = arguments.get('--config_file') or 'template_config.json'
+    config_file = arguments.get('--config-file') or 'template_config.json'
     output_file = arguments.get('--output-file') or 'labenvironment.template'
 
     print '\nParsing config from %s' % config_file
