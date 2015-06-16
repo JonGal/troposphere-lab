@@ -16,6 +16,7 @@ Options:
 """
 from docopt import docopt
 import json
+import yaml
 
 from troposphere import Template
 from vpc_generator import VPCGenerator
@@ -51,14 +52,13 @@ class CFLab:
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='CFLab 0.1')
-    print arguments
 
-    config_file = arguments.get('--config-file') or 'template_config.json'
+    config_file = arguments.get('--config-file') or 'template_config.yaml'
     output_file = arguments.get('--output-file') or 'labenvironment.template'
 
     print '\nParsing config from %s' % config_file
     with open(config_file, 'r') as f:
-        config = json.loads(f.read())
+        config = yaml.load(f.read())
 
     print '\nGenerating template'
     lab = CFLab(config)

@@ -1,0 +1,10 @@
+# template_config.yaml - contains input variables needed for generating
+# Cloudformation templates with variable inputs.
+---
+  # globals - set of globaly scoped variables
+  globals:
+    description: "Infrastructure from code!"
+
+  # template - set of Cloudformation specific inputs
+  template:
+    ami_id: "ami-123456"

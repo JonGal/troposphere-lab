@@ -3,3 +3,4 @@ boto3==0.0.16
 docopt==0.6.1
 ipcalc==1.1.2
 troposphere==0.7.2
+PyYAML==3.11
