@@ -41,7 +41,12 @@ class CFLab:
 
         #create VPC, EC2
         self.vpc_generator = VPCGenerator(self.template_args)
-        self.ec2_generator = EC2Generator(self.template_args, self.vpc_generator.vpc, self.vpc_generator.subnets)
+        self.ec2_generator = EC2Generator(
+            self.template_args,
+            self.vpc_generator.vpc,
+            self.vpc_generator.subnets,
+            self.vpc_generator.instance_security_group
+        )
 
         for resource in self.vpc_generator.resources:
             self.template.add_resource(resource)

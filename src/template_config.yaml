@@ -7,9 +7,10 @@
 
   # template - set of Cloudformation specific inputs
   template:
-    ami_id: "ami-123456"
+    ami_id: "ami-5189a661"
     vpc_cidr: "10.23.0.0/16"
-    ssh_cidr: ""
+    ssh_cidr: "0.0.0.0/0"
+    key_pair_name: "kelly-us-west-2"
     availability_zones:
       - "us-west-2a"
       - "us-west-2b"

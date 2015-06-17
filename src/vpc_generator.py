@@ -49,18 +49,18 @@ class VPCGenerator:
                     Name="CloudformationLab")))
 
     def create_internet_gateway(self):
-        internetGateway = self.add_resource(
+        internet_gateway = self.add_resource(
             InternetGateway(
                 'InternetGateway',
                 Tags=Tags(
                     Application=self.ref_stack_id,
                     Name="CloudformationLab")))
 
-        gatewayAttachment = self.add_resource(
+        gateway_attachment = self.add_resource(
             VPCGatewayAttachment(
                 'AttachGateway',
                 VpcId=Ref(self.vpc),
-                InternetGatewayId=Ref(internetGateway)))
+                InternetGatewayId=Ref(internet_gateway)))
 
     def create_route_table(self, public=True):
         prefix = "Public" if public else "Private"
@@ -119,7 +119,7 @@ class VPCGenerator:
                 Application=self.ref_stack_id,
                 Name="CloudformationLab" + prefix + suffix))
 
-        subnetRouteTableAssociation = self.add_resource(
+        subnet_route_table_association = self.add_resource(
             SubnetRouteTableAssociation(
                 prefix + 'SubnetRouteTableAssociation' + suffix,
                 SubnetId=Ref(subnet),
@@ -128,7 +128,7 @@ class VPCGenerator:
         return subnet
 
     def create_security_group(self, template_args):
-        instanceSecurityGroup = self.add_resource(
+        self.instance_security_group = self.add_resource(
             SecurityGroup(
                 'InstanceSecurityGroup',
                 GroupDescription='Enable SSH access via port 22',
