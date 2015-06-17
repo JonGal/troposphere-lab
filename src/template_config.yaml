@@ -7,13 +7,60 @@
 
   # template - set of Cloudformation specific inputs
   template:
-    ami_id: "ami-123456"
-    vpc_cidr: "10.23.0.0/16"
-    ssh_cidr: ""
-    availability_zones:
+    # this initial set of configs need to be provided as they are based on
+    # your target environment.  The ami-id was created previously in your lab...
+    vpc_cidr: "10.23.0.0/16" # base cidr for the new vpc, subnet cidrs are calculated for this.
+    ami_id: "ami-79b98349" # id of the ami for launching
+    key_pair_name: "kelly-us-west-2" # key-pair incase you want to ssh on in
+    availability_zones: # availability zones we are going to launch the instances into
       - "us-west-2a"
       - "us-west-2b"
       - "us-west-2c"
 
-    public_subnets_per_az: 1
-    private_subnets_per_az: 2
+    public_subnets_per_az: 1 # number of public subnets in each availability zone
+    private_subnets_per_az: 2 # number of private subnets in each availability zone
+
+    asg: # set of configs for creating the asg
+      instance_type: "t2.small" # size of the instance
+      desired_capacity: "2" # how many instances do we need
+      min_capacity: "1" # what is the minimun we can run
+      max_capacity: "3" # how many is too many
+
+      security_group: # set of configs for the instance security group
+        ingress:
+          -
+            ip_protocol: 'tcp'
+            from_port: '22'
+            to_port: '22'
+            cidr_ip: '0.0.0.0/0'
+          -
+            ip_protocol: 'tcp'
+            from_port: '80'
+            to_port: '80'
+            cidr_ip: '0.0.0.0/0'
+
+      # user data for the new instances
+      user_data: |
+
+
+    elb: # set of configs for the new Elastic Load Balancer
+      health_check: # used by elb to detect if an instance is healthy
+        target: "HTTP:80/"
+        healthy_threshold: "2"
+        unhealthy_threshold: "5"
+        interval: "20"
+        timeout: "15"
+
+      listener: # used for proxying request from the elb to the instances
+        load_balancer_port: "80"
+        instance_port: "80"
+        protocol: "HTTP"
+        instance_protocol: "HTTP"
+
+      security_group: # set of configs for the elb security group
+        ingress:
+          -
+            ip_protocol: 'tcp'
+            from_port: '80'
+            to_port: '80'
+            cidr_ip: '0.0.0.0/0'
