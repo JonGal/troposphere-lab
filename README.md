@@ -8,7 +8,7 @@ To use this repository, you must install the following Python libraries:
  - boto
  - troposphere
 
-This isolates the dependencies used by this project from those of any other python projects you might have. It is standard practice for working with python.
+Installing the dependencies within virtualenv isolates the dependencies used by this project from those of any other python projects you might have. It is standard practice for working with python.
 
 First time steps: Install and initialize the virtualenv wrapper tool.
 
@@ -28,7 +28,7 @@ From within the project directory, create and install the dependencies for a new
 > mkvirtualenv cflab -r requirements.txt
 ```
 
-Now you are inside the virtual environment as indicated by the parentheses at the begining of the prompt. To exit the virtual environment, run shell function deactivate. From here on you can reenter your virtual environment by running workon cflab
+Now you are inside the virtual environment as indicated by the parentheses at the begining of the prompt. To exit the virtual environment, run shell function `deactivate`. From here on you can reenter your virtual environment by running workon cflab
 
 ```
 (cflab)MyComputerName:aws-cflab $ deactivate
