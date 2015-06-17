@@ -6,6 +6,7 @@ from troposphere.ec2 import PortRange, NetworkAcl, Route, \
     VPC, NetworkInterfaceProperty, NetworkAclEntry, \
     SubnetNetworkAclAssociation, EIP, InternetGateway, \
     SecurityGroupRule, SecurityGroup
+import re
 
 class VPCGenerator:
     '''
@@ -19,7 +20,7 @@ class VPCGenerator:
         '''
 
         self.resources = []
-        self.subnets = []
+        self.subnets = {"Public": [], "Private": []}
         self.route_tables = {}
 
         self.ref_stack_id = Ref('AWS::StackId')
@@ -33,9 +34,7 @@ class VPCGenerator:
         self.create_route_table(public=False)
         self.create_route_table(public=True)
 
-        self.create_subnets(template_args.get('private_subnet_group_cidrs'), 'Private')
-        self.create_subnets(template_args.get('public_subnet_group_cidrs'))
-
+        self.create_subnets(template_args)
 
         self.create_security_group(template_args)
 
@@ -84,24 +83,49 @@ class VPCGenerator:
         self.route_tables[prefix] = route_table
         self.add_resource(route_table)
 
-    def create_subnets(self, cidrs, prefix='Public'):
-        for index, cidr in enumerate(cidrs):
-            subnet = Subnet(
-                prefix + 'Subnet' + str(index),
-                CidrBlock=cidr,
-                VpcId=Ref(self.vpc),
-                Tags=Tags(
-                    Application=self.ref_stack_id,
-                    Name="CloudformationLab" + prefix + str(index)))
+    def create_subnets(self, template_args):
+        azs = template_args.get('availability_zones')
+        base_cidr = template_args.get('vpc_cidr')
+        regex = re.compile('(\d{0,3}\.\d{0,3})\.\d{0,3}(\.\d{0,3}).*')
 
-            subnetRouteTableAssociation = self.add_resource(
-                SubnetRouteTableAssociation(
-                    prefix + 'SubnetRouteTableAssociation' + str(index),
-                    SubnetId=Ref(subnet),
-                    RouteTableId=Ref(self.route_tables[prefix]),
-                ))
-            self.subnets.append(self.add_resource(
-                subnet))
+        for index, az in enumerate(azs):
+
+            for privates in range(0,template_args.get('private_subnets_per_az')):
+                octet = str((index * template_args.get('private_subnets_per_az')) + privates + 1 ) + "0"
+                cidr = regex.sub(r'\1.%s\2/24' % octet, base_cidr)
+                subnet = self._create_subnet(az, cidr, octet, False)
+
+                self.subnets["Private"].append(self.add_resource(
+                    subnet))
+
+            for publics in range(0,template_args.get('public_subnets_per_az')):
+                octet = str((index * template_args.get('public_subnets_per_az')) + publics + 1 )
+                cidr = regex.sub(r'\1.%s\2/24' % octet, base_cidr)
+                subnet = self._create_subnet(az, cidr, octet, True)
+
+                self.subnets["Public"].append(self.add_resource(
+                    subnet))
+
+
+
+    def _create_subnet(self, az, cidr, suffix, public=True):
+        prefix = "Public" if public else "Private"
+        subnet = Subnet(
+            prefix + 'Subnet' + suffix,
+            CidrBlock=cidr,
+            VpcId=Ref(self.vpc),
+            AvailabilityZone=az,
+            Tags=Tags(
+                Application=self.ref_stack_id,
+                Name="CloudformationLab" + prefix + suffix))
+
+        subnetRouteTableAssociation = self.add_resource(
+            SubnetRouteTableAssociation(
+                prefix + 'SubnetRouteTableAssociation' + suffix,
+                SubnetId=Ref(subnet),
+                RouteTableId=Ref(self.route_tables[prefix]),
+            ))
+        return subnet
 
     def create_security_group(self, template_args):
         instanceSecurityGroup = self.add_resource(

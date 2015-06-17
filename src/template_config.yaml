@@ -10,13 +10,10 @@
     ami_id: "ami-123456"
     vpc_cidr: "10.23.0.0/16"
     ssh_cidr: ""
+    availability_zones:
+      - "us-west-2a"
+      - "us-west-2b"
+      - "us-west-2c"
 
-    private_subnet_group_cidrs:
-      - "10.23.10.0/24"
-      - "10.23.20.0/24"
-      - "10.23.30.0/24"
-
-    public_subnet_group_cidrs:
-      - "10.23.0.0/24"
-      - "10.23.1.0/24"
-      - "10.23.2.0/24"
+    public_subnets_per_az: 1
+    private_subnets_per_az: 2
