@@ -11,8 +11,8 @@
     # this initial set of configs need to be provided as they are based on
     # your target environment.  The ami-id was created previously in your lab...
     vpc_cidr: "10.23.0.0/16" # base cidr for the new vpc, subnet cidrs are calculated for this.
-    ami_id: "ami-79b98349" # id of the ami for launching
-    key_pair_name: "kelly-us-west-2" # key-pair incase you want to ssh on in
+    ami_id: "ami-1234567" # id of the ami for launching
+    key_pair_name: "your-key" # key-pair incase you want to ssh on in
     availability_zones: # availability zones we are going to launch the instances into
       - "us-west-2a"
       - "us-west-2b"
