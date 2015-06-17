@@ -40,8 +40,8 @@ class CFLab:
         self.template.description       = self.globals.get('description', '')
 
         #create VPC, EC2
-        self.vpc_generator = VPCGenerator(config_dictionary)
-        self.ec2_generator = EC2Generator(config_dictionary, self.vpc_generator.vpc, self.vpc_generator.subnets)
+        self.vpc_generator = VPCGenerator(self.template_args)
+        self.ec2_generator = EC2Generator(self.template_args, self.vpc_generator.vpc, self.vpc_generator.subnets)
 
         for resource in self.vpc_generator.resources:
             self.template.add_resource(resource)
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     print '\nWriting template to %s\n' % output_file
     with open(output_file, 'w') as text_file:
-        json.dump(json.loads(lab.template.to_json()), text_file, indent=0, separators=(',', ':'))
+        json.dump(json.loads(lab.template.to_json()), text_file, indent=2, separators=(',', ': '))
 
     if arguments.get('--debug'):
         print lab.template.to_json()

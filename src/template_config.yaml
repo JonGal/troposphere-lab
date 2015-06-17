@@ -8,3 +8,12 @@
   # template - set of Cloudformation specific inputs
   template:
     ami_id: "ami-123456"
+    vpc_cidr: "10.23.0.0/16"
+    ssh_cidr: ""
+    availability_zones:
+      - "us-west-2a"
+      - "us-west-2b"
+      - "us-west-2c"
+
+    public_subnets_per_az: 1
+    private_subnets_per_az: 2
