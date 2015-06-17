@@ -4,8 +4,8 @@ from troposphere import Ref, Tags
 from troposphere.ec2 import PortRange, NetworkAcl, Route, \
     VPCGatewayAttachment, SubnetRouteTableAssociation, Subnet, RouteTable, \
     VPC, NetworkInterfaceProperty, NetworkAclEntry, \
-    SubnetNetworkAclAssociation, EIP, InternetGateway, \
-    SecurityGroupRule, SecurityGroup
+    SubnetNetworkAclAssociation, EIP, InternetGateway
+
 import re
 
 class VPCGenerator:
@@ -16,7 +16,7 @@ class VPCGenerator:
     def __init__(self, template_args):
         '''
         Method initializes the DevDeploy class and composes the CloudFormation template to deploy the solution
-        @param config_dictionary [dict] collection of keyword arguments for this class implementation
+        @param template_args [dict] collection of keyword arguments for this class implementation
         '''
 
         self.resources = []
@@ -36,10 +36,12 @@ class VPCGenerator:
 
         self.create_subnets(template_args)
 
-        self.create_security_group(template_args)
-
 
     def create_vpc(self, template_args):
+        '''
+        Method creates a new VPC object and adds it to the resources
+        @param template_args [dict] collection of keyword arguments for this vpc implementation
+        '''
         self.vpc = self.add_resource(
             VPC(
                 'VPC',
@@ -49,6 +51,9 @@ class VPCGenerator:
                     Name="CloudformationLab")))
 
     def create_internet_gateway(self):
+        '''
+        Method creates a new InternetGateway and attaches it to the VPC object and adds it to the resources
+        '''
         internet_gateway = self.add_resource(
             InternetGateway(
                 'InternetGateway',
@@ -63,6 +68,10 @@ class VPCGenerator:
                 InternetGatewayId=Ref(internet_gateway)))
 
     def create_route_table(self, public=True):
+        '''
+        Method creates a new Route table with routes to the IG if public
+        @param public [bool] flag for creating public or private route tables
+        '''
         prefix = "Public" if public else "Private"
         route_table = RouteTable(
                 prefix + 'RouteTable',
@@ -84,6 +93,10 @@ class VPCGenerator:
         self.add_resource(route_table)
 
     def create_subnets(self, template_args):
+        '''
+        Method creates a set of Subnets and adds them to the resources
+        @param template_args [dict] collection of keyword arguments for the subnets
+        '''
         azs = template_args.get('availability_zones')
         base_cidr = template_args.get('vpc_cidr')
         regex = re.compile('(\d{0,3}\.\d{0,3})\.\d{0,3}(\.\d{0,3}).*')
@@ -106,9 +119,14 @@ class VPCGenerator:
                 self.subnets["Public"].append(self.add_resource(
                     subnet))
 
-
-
     def _create_subnet(self, az, cidr, suffix, public=True):
+        '''
+        Method creates a new Subnet object and creates a subnet route adds it to the resources
+        @param az [string] name of the availability zones for this subnet
+        @param cidr [string] ip range that defines this subnet
+        @param suffix [string] unique string for defining the subnet
+        @param public [bool] flag use to determine the route table for the subnet
+        '''
         prefix = "Public" if public else "Private"
         subnet = Subnet(
             prefix + 'Subnet' + suffix,
@@ -127,25 +145,10 @@ class VPCGenerator:
             ))
         return subnet
 
-    def create_security_group(self, template_args):
-        self.instance_security_group = self.add_resource(
-            SecurityGroup(
-                'InstanceSecurityGroup',
-                GroupDescription='Enable SSH access via port 22',
-                SecurityGroupIngress=[
-                    SecurityGroupRule(
-                        IpProtocol='tcp',
-                        FromPort='22',
-                        ToPort='22',
-                        CidrIp='0.0.0.0/0'),
-                    SecurityGroupRule(
-                        IpProtocol='tcp',
-                        FromPort='80',
-                        ToPort='80',
-                        CidrIp=template_args['ssh_cidr'])],
-                VpcId=Ref(self.vpc),
-            ))
-
     def add_resource(self, resource):
+        '''
+        Method helper for adding resources to the resource list
+        @param resource [object] troposphere resource object
+        '''
         self.resources.append(resource)
         return resource
