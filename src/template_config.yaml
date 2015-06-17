@@ -7,6 +7,7 @@
 
   # template - set of Cloudformation specific inputs
   template:
+    # **************************************************************************
     # this initial set of configs need to be provided as they are based on
     # your target environment.  The ami-id was created previously in your lab...
     vpc_cidr: "10.23.0.0/16" # base cidr for the new vpc, subnet cidrs are calculated for this.
@@ -16,6 +17,7 @@
       - "us-west-2a"
       - "us-west-2b"
       - "us-west-2c"
+    # **************************************************************************
 
     public_subnets_per_az: 1 # number of public subnets in each availability zone
     private_subnets_per_az: 2 # number of private subnets in each availability zone

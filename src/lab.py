@@ -32,7 +32,6 @@ class CFLab:
         Method initializes the DevDeploy class and composes the CloudFormation template to deploy the solution
         @param config_dictionary [dict] collection of keyword arguments for this class implementation
         '''
-        print 'creating some cloudformation!'
         self.globals                    = config_dictionary.get('globals', {})
         self.template_args              = config_dictionary.get('template', {})
 
