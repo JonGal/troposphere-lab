@@ -22,20 +22,20 @@ class EC2Generator:
         @param subnets [array] collection of subnets for apply the asg and elb to
         '''
 
-        self.ami_id = template_args['ami_id']
-        self.key_pair_name = template_args['key_pair_name']
         self.availability_zones = template_args['availability_zones']
         self.vpc = vpc
         self.subnets = [ Ref(subnet) for subnet in subnets['Public'] ]
         self.resources = []
 
-        self.instance_security_group = self.create_security_group(template_args['asg']['security_group'], "Instance")
-        self.load_balancer_security_group = self.create_security_group(template_args['elb']['security_group'], "LoadBalancer")
+        if template_args.has_key('asg'):
+          self.instance_security_group = self.create_security_group(template_args['asg']['security_group'], "Instance")
+          self.create_launch_configuration(template_args['asg'])
+          self.create_auto_scaling_group(template_args['asg'])
 
-        self.create_launch_configuration(template_args['asg'])
+        if template_args.has_key('elb'):
+          self.load_balancer_security_group = self.create_security_group(template_args['elb']['security_group'], "LoadBalancer")
+          self.create_load_balancer(template_args['elb'])
 
-        self.create_load_balancer(template_args['elb'])
-        self.create_auto_scaling_group(template_args['asg'])
 
     def create_launch_configuration(self, asg_args):
         '''
@@ -52,8 +52,8 @@ class EC2Generator:
                 "    --region ", Ref("AWS::Region"), "\n",
                 asg_args['user_data']
             ])),
-            ImageId=self.ami_id,
-            KeyName=self.key_pair_name,
+            ImageId=asg_args['ami_id'],
+            KeyName=asg_args['key_pair_name'],
             SecurityGroups=[Ref(self.instance_security_group)],
             InstanceType=asg_args['instance_type'],
             AssociatePublicIpAddress=True,
