@@ -18,7 +18,8 @@ from docopt import docopt
 import json
 import yaml
 
-from troposphere import Template
+from troposphere import Parameter, Output, Ref, Template
+from troposphere import Base64, FindInMap, GetAtt
 from vpc_generator import VPCGenerator
 from ec2_generator import EC2Generator
 
@@ -51,6 +52,9 @@ class CFLab:
 
         for resource in self.ec2_generator.resources:
             self.template.add_resource(resource)
+
+        for output in self.ec2_generator.outputs:
+            self.template.add_output(output)
 
 
 if __name__ == '__main__':

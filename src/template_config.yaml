@@ -11,7 +11,6 @@
     # this initial set of configs need to be provided as they are based on
     # your target environment.  The ami-id was created previously in your lab...
     vpc_cidr: "10.23.0.0/16" # base cidr for the new vpc, subnet cidrs are calculated for this.
-    ami_id: "ami-e7527ed7" # id of the ami for launching
     key_pair_name: "MyKeyPair" # key-pair incase you want to ssh on in
     availability_zones: # availability zones we are going to launch the instances into
       - "us-west-2a"
@@ -67,6 +66,7 @@
 
 
     elb: # set of configs for the new Elastic Load Balancer
+      output_dns: true
       health_check: # used by elb to detect if an instance is healthy
         target: "HTTP:80/"
         healthy_threshold: "2"

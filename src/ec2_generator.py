@@ -1,6 +1,6 @@
 
 from troposphere import cloudformation, autoscaling
-from troposphere import Base64, Join, Ref
+from troposphere import Base64, Join, Ref, Output, GetAtt
 from troposphere.autoscaling import AutoScalingGroup, Tag
 from troposphere.autoscaling import LaunchConfiguration
 from troposphere.elasticloadbalancing import LoadBalancer
@@ -26,15 +26,18 @@ class EC2Generator:
         self.vpc = vpc
         self.subnets = [ Ref(subnet) for subnet in subnets['Public'] ]
         self.resources = []
+        self.outputs = []
+
+
+        #Make sure we build ELB firstgt
+        if template_args.has_key('elb'):
+          self.load_balancer_security_group = self.create_security_group(template_args['elb']['security_group'], "LoadBalancer")
+          self.create_load_balancer(template_args['elb'])
 
         if template_args.has_key('asg'):
           self.instance_security_group = self.create_security_group(template_args['asg']['security_group'], "Instance")
           self.create_launch_configuration(template_args['asg'])
           self.create_auto_scaling_group(template_args['asg'])
-
-        if template_args.has_key('elb'):
-          self.load_balancer_security_group = self.create_security_group(template_args['elb']['security_group'], "LoadBalancer")
-          self.create_load_balancer(template_args['elb'])
 
 
     def create_launch_configuration(self, asg_args):
@@ -81,7 +84,7 @@ class EC2Generator:
             InstanceProtocol=listener_args['instance_protocol'],
         )
 
-        self.load_balancer = self.add_resource(LoadBalancer(
+        self.load_balancer = LoadBalancer(
             "LoadBalancer",
             ConnectionDrainingPolicy=elb.ConnectionDrainingPolicy(
                 Enabled=True,
@@ -96,7 +99,15 @@ class EC2Generator:
             SecurityGroups=[Ref(self.load_balancer_security_group)],
             LoadBalancerName="Cloudformation-Loadbalancer",
             Scheme="internet-facing",
-        ))
+        )
+
+        self.add_resource(self.load_balancer)
+
+        if elb_args.has_key('output_dns'):
+            self.add_output(Output("ELBDNS", 
+                    Description="DNS Name of ELB", 
+                    Value=Join("", ["http://", GetAtt(self.load_balancer,"DNSName") ]
+                    )))
 
     def create_auto_scaling_group(self, asg_args):
         '''
@@ -158,3 +169,11 @@ class EC2Generator:
         '''
         self.resources.append(resource)
         return resource
+
+    def add_output(self, output):
+        '''
+        Method helper for adding output to the output list
+        @param output [object] troposphere output object
+        '''
+        self.outputs.append(output)
+        return output
