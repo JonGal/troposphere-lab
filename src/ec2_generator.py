@@ -22,6 +22,7 @@ class EC2Generator:
         @param subnets [array] collection of subnets for apply the asg and elb to
         '''
 
+        self.ref_stack_id = Ref('AWS::StackId')
         self.availability_zones = template_args['availability_zones']
         self.vpc = vpc
         self.subnets = [ Ref(subnet) for subnet in subnets['Public'] ]
