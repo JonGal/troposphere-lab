@@ -11,8 +11,7 @@
     # this initial set of configs need to be provided as they are based on
     # your target environment.  The ami-id was created previously in your lab...
     vpc_cidr: "10.23.0.0/16" # base cidr for the new vpc, subnet cidrs are calculated for this.
-    ami_id: "ami-1234567" # id of the ami for launching
-    key_pair_name: "your-key" # key-pair incase you want to ssh on in
+    key_pair_name: "MyKeyPair" # key-pair incase you want to ssh on in
     availability_zones: # availability zones we are going to launch the instances into
       - "us-west-2a"
       - "us-west-2b"
@@ -21,9 +20,10 @@
 
     public_subnets_per_az: 1 # number of public subnets in each availability zone
     private_subnets_per_az: 2 # number of private subnets in each availability zone
-
-    asg: # set of configs for creating the asg
-      instance_type: "t2.small" # size of the instance
+    
+    bastion: #configs for creating bastion host
+      ami_id: "ami-e7527ed7" # id of the ami for launching
+      instance_type: "t2.micro" # size of the instance
       desired_capacity: "2" # how many instances do we need
       min_capacity: "1" # what is the minimun we can run
       max_capacity: "3" # how many is too many
@@ -35,17 +35,38 @@
             from_port: '22'
             to_port: '22'
             cidr_ip: '0.0.0.0/0'
+
+      # user data for the new instances
+      user_data: |
+
+    asg: # set of configs for creating the asg
+      ami_id: "ami-01055f31" #Bitnami LAMP stack
+      key_pair_name: "MyKeyPair" # key-pair incase you want to ssh on in
+      instance_type: "t2.micro" # size of the instance
+      desired_capacity: "2" # how many instances do we need
+      min_capacity: "1" # what is the minimun we can run
+      max_capacity: "3" # how many is too many
+
+      security_group: # set of configs for the instance security group
+        ingress:
           -
             ip_protocol: 'tcp'
             from_port: '80'
             to_port: '80'
             cidr_ip: '0.0.0.0/0'
+#          -
+            #ip_protocol: 'tcp'
+            #from_port: '22'
+            #to_port: '22'
+            #cidr_ip: '0.0.0.0/0'
+            #security_group: "bastion"
 
       # user data for the new instances
       user_data: |
 
 
     elb: # set of configs for the new Elastic Load Balancer
+      output_dns: true
       health_check: # used by elb to detect if an instance is healthy
         target: "HTTP:80/"
         healthy_threshold: "2"
