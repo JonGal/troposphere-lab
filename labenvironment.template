@@ -1,0 +1,582 @@
+{
+  "Outputs": {
+    "ELBDNS": {
+      "Description": "DNS Name of ELB",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "http://",
+            {
+              "Fn::GetAtt": [
+                "LoadBalancer",
+                "DNSName"
+              ]
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "Description": "Infrastructure from code!",
+  "Resources": {
+    "PrivateSubnetRouteTableAssociation10": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet10"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PrivateSubnetRouteTableAssociation30": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet30"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PublicRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "GatewayId": {
+          "Ref": "InternetGateway"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        }
+      },
+      "DependsOn": "AttachGateway"
+    },
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLab",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "PrivateRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLab",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "PrivateSubnetRouteTableAssociation60": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet60"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PrivateSubnetRouteTableAssociation50": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet50"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PublicSubnetRouteTableAssociation1": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PublicSubnet1"
+        },
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        }
+      }
+    },
+    "PublicSubnetRouteTableAssociation2": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PublicSubnet2"
+        },
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        }
+      }
+    },
+    "PublicSubnetRouteTableAssociation3": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PublicSubnet3"
+        },
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        }
+      }
+    },
+    "PrivateSubnet50": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": "us-west-2c",
+        "CidrBlock": "10.23.50.0/24",
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLabPrivate50",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "PrivateSubnet10": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": "us-west-2a",
+        "CidrBlock": "10.23.10.0/24",
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLabPrivate10",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "PrivateSubnet30": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": "us-west-2b",
+        "CidrBlock": "10.23.30.0/24",
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLabPrivate30",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "AttachGateway": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "InternetGatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "LoadBalancerSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "SecurityGroupIngress": [
+          {
+            "ToPort": "80",
+            "FromPort": "80",
+            "IpProtocol": "tcp",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "GroupDescription": "Enable SSH access via port 22"
+      }
+    },
+    "VPC": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.23.0.0/16",
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLab",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "PrivateSubnetRouteTableAssociation20": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet20"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "LaunchConfiguration": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties": {
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash\n",
+                "cfn-signal -e 0",
+                "    --resource AutoscalingGroup",
+                "    --stack ",
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "    --region ",
+                {
+                  "Ref": "AWS::Region"
+                },
+                "\n",
+                ""
+              ]
+            ]
+          }
+        },
+        "ImageId": "ami-01055f31",
+        "KeyName": "MyKeyPair",
+        "SecurityGroups": [
+          {
+            "Ref": "InstanceSecurityGroup"
+          }
+        ],
+        "InstanceType": "t2.micro",
+        "AssociatePublicIpAddress": "true"
+      }
+    },
+    "PrivateSubnetRouteTableAssociation40": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet40"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PublicRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLab",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "PublicSubnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": "us-west-2a",
+        "CidrBlock": "10.23.1.0/24",
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLabPublic1",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "PublicSubnet3": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": "us-west-2c",
+        "CidrBlock": "10.23.3.0/24",
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLabPublic3",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "PublicSubnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": "us-west-2b",
+        "CidrBlock": "10.23.2.0/24",
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLabPublic2",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "PrivateSubnet40": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": "us-west-2b",
+        "CidrBlock": "10.23.40.0/24",
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLabPrivate40",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "AutoscalingGroup": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "Properties": {
+        "AvailabilityZones": [
+          "us-west-2a",
+          "us-west-2b",
+          "us-west-2c"
+        ],
+        "DesiredCapacity": "2",
+        "Tags": [
+          {
+            "Value": "CloudformationLab",
+            "PropagateAtLaunch": true,
+            "Key": "Name"
+          }
+        ],
+        "LaunchConfigurationName": {
+          "Ref": "LaunchConfiguration"
+        },
+        "MinSize": "1",
+        "MaxSize": "3",
+        "VPCZoneIdentifier": [
+          {
+            "Ref": "PublicSubnet1"
+          },
+          {
+            "Ref": "PublicSubnet2"
+          },
+          {
+            "Ref": "PublicSubnet3"
+          }
+        ],
+        "LoadBalancerNames": [
+          {
+            "Ref": "LoadBalancer"
+          }
+        ],
+        "HealthCheckGracePeriod": 60,
+        "HealthCheckType": "ELB"
+      },
+      "UpdatePolicy": {
+        "AutoScalingRollingUpdate": {
+          "PauseTime": "PT5M",
+          "WaitOnResourceSignals": "true",
+          "MaxBatchSize": "1",
+          "MinInstancesInService": "1"
+        }
+      }
+    },
+    "PrivateSubnet60": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": "us-west-2c",
+        "CidrBlock": "10.23.60.0/24",
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLabPrivate60",
+            "Key": "Name"
+          }
+        ]
+      }
+    },
+    "InstanceSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "SecurityGroupIngress": [
+          {
+            "ToPort": "80",
+            "FromPort": "80",
+            "IpProtocol": "tcp",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "GroupDescription": "Enable SSH access via port 22"
+      }
+    },
+    "LoadBalancer": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties": {
+        "ConnectionDrainingPolicy": {
+          "Enabled": true,
+          "Timeout": 120
+        },
+        "Subnets": [
+          {
+            "Ref": "PublicSubnet1"
+          },
+          {
+            "Ref": "PublicSubnet2"
+          },
+          {
+            "Ref": "PublicSubnet3"
+          }
+        ],
+        "HealthCheck": {
+          "HealthyThreshold": "2",
+          "Interval": "20",
+          "Target": "HTTP:80/",
+          "Timeout": "15",
+          "UnhealthyThreshold": "5"
+        },
+        "Listeners": [
+          {
+            "InstancePort": "80",
+            "LoadBalancerPort": "80",
+            "Protocol": "HTTP",
+            "InstanceProtocol": "HTTP"
+          }
+        ],
+        "CrossZone": "true",
+        "SecurityGroups": [
+          {
+            "Ref": "LoadBalancerSecurityGroup"
+          }
+        ],
+        "LoadBalancerName": "Cloudformation-Loadbalancer",
+        "Scheme": "internet-facing"
+      }
+    },
+    "PrivateSubnet20": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": "us-west-2a",
+        "CidrBlock": "10.23.20.0/24",
+        "Tags": [
+          {
+            "Value": {
+              "Ref": "AWS::StackId"
+            },
+            "Key": "Application"
+          },
+          {
+            "Value": "CloudformationLabPrivate20",
+            "Key": "Name"
+          }
+        ]
+      }
+    }
+  }
+}
