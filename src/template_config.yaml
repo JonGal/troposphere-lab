@@ -41,7 +41,7 @@
 
     asg: # set of configs for creating the asg
       ami_id: "ami-01055f31" #Bitnami LAMP stack
-      key_pair_name: "MyKeyPair" # key-pair incase you want to ssh on in
+      key_pair_name: "MyKey" # key-pair incase you want to ssh on in
       instance_type: "t2.micro" # size of the instance
       desired_capacity: "2" # how many instances do we need
       min_capacity: "1" # what is the minimun we can run
