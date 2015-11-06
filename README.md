@@ -29,8 +29,7 @@ http://stackoverflow.com/questions/4750806/how-to-install-pip-on-windows
 
 or just upgrade your python to 2.7.9 or later
 
-```
-
+### Installation Continued
 From within the project directory, create and install the dependencies for a new environment called cflab (for example):
 
 ```
