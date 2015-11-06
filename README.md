@@ -13,19 +13,28 @@ Installing the dependencies within virtualenv isolates the dependencies used by 
 First time steps: Install and initialize the virtualenv wrapper tool.
 
 ```
+[Mac or Linux]
 > pip install virtualenvwrapper
 > source /usr/local/bin/virtualenvwrapper.sh  # put this line in your .bash_profile
 ```
-
 If pip is not currently installed you can install it after installing python with:
-
 ```
 > easy_install pip
 ```
+[For Windows ]
+pip install virtualenvwrapper-win
+If pip is not currently installed you can install it by following the instructions here:
+```
+http://stackoverflow.com/questions/4750806/how-to-install-pip-on-windows
+
+or just upgrade your python to 2.7.9 or later
+
+```
+
 From within the project directory, create and install the dependencies for a new environment called cflab (for example):
 
 ```
-> mkvirtualenv cflab -r requirements.txt
+> mkvirtualenv cflab 
 ```
 
 Now you are inside the virtual environment as indicated by the parentheses at the begining of the prompt. To exit the virtual environment, run shell function `deactivate`. From here on you can reenter your virtual environment by running workon cflab
