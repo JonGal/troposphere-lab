@@ -11,9 +11,8 @@ To use this repository, you must install the following Python libraries:
 Installing the dependencies within virtualenv isolates the dependencies used by this project from those of any other python projects you might have. It is standard practice for working with python.
 
 First time steps: Install and initialize the virtualenv wrapper tool.
-
+### [Mac or Linux]
 ```
-[Mac or Linux]
 > pip install virtualenvwrapper
 > source /usr/local/bin/virtualenvwrapper.sh  # put this line in your .bash_profile
 ```
@@ -21,10 +20,11 @@ If pip is not currently installed you can install it after installing python wit
 ```
 > easy_install pip
 ```
-[For Windows ]
-pip install virtualenvwrapper-win
-If pip is not currently installed you can install it by following the instructions here:
+### [For Windows ]
 ```
+pip install virtualenvwrapper-win
+```
+If pip is not currently installed you can install it by following the instructions here:
 http://stackoverflow.com/questions/4750806/how-to-install-pip-on-windows
 
 or just upgrade your python to 2.7.9 or later
