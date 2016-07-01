@@ -56,11 +56,11 @@ Install the project dependencies by running the following command while inside y
 You need to update the template for Cloud Formation to make sure it can run in your environment. 
 
     1. Open the file named "template_config.yaml" in the src.
-    2. Search for the string "key_pair_name:" in the file.
+    2. Search for every place the string "key_pair_name:" appears in the file. (There are probably two)
     3. Change "MyKey" to the name of any key you have already created in your account.
     4. Save the "template_config.yaml" file.
 
-Note that your key is typically stored in a single region, so make sure the key you changed to is in th us-west-2 region.
+Note that your key is typically stored in a single region, so make sure the key you changed to is in the us-west-2 region.
 
 
 ## Let's create a script
