@@ -62,3 +62,6 @@ target/
 
 #virtualenv
 cflab/
+
+#output file
+labenvironment.template

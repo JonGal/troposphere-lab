@@ -22,7 +22,7 @@
     private_subnets_per_az: 2 # number of private subnets in each availability zone
     
     bastion: #configs for creating bastion host
-      ami_id: "ami-e7527ed7" # id of the ami for launching
+      ami_id: "ami-7172b611" # id of the ami for launching
       instance_type: "t2.micro" # size of the instance
       desired_capacity: "2" # how many instances do we need
       min_capacity: "1" # what is the minimun we can run

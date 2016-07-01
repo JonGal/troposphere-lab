@@ -296,7 +296,7 @@
           }
         },
         "ImageId": "ami-01055f31",
-        "KeyName": "MyKeyPair",
+        "KeyName": "MyKey",
         "SecurityGroups": [
           {
             "Ref": "InstanceSecurityGroup"
