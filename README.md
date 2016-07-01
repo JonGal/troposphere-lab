@@ -51,6 +51,13 @@ Install the project dependencies by running the following command while inside y
 
 # Let's get going
 
+You need to update the temlate for Cloud Formation to make sure it can run in your environment. 
+1. Open the file named "template_config.yaml" in the src.
+2. Search for the string "key_pair_name:" in the file.
+3. Change "MyKey" to the name of any key you have already created in your account.
+4. Save the "template_config.yaml" file.
+
+## Let's create a script
 To use the script itself, you can run it directly from the command line:
 
 ```bash
