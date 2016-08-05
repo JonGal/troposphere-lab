@@ -60,8 +60,14 @@ class CFLab:
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='CFLab 0.1')
 
-    config_file = arguments.get('--config-file') or 'template_config.yaml'
-    output_file = arguments.get('--output-file') or 'labenvironment.template'
+    config_list = arguments.get('--config-file') or ['template_config.yaml']
+    #print config_list
+    config_file = ''.join(config_list)
+    #print config_file
+    output_list = arguments.get('--output-file') or ['labenvironment.template']
+    #print output_list
+    output_file = ''.join(output_list)
+    #print output_file
 
     print '\nParsing config from %s' % config_file
     with open(config_file, 'r') as f:
